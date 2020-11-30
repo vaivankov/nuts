@@ -2,7 +2,7 @@
 
 const componentParams = {
   template: `
-  <div class="card-slider" @mousedown="setStartCoordinates($event)">
+  <div class="card-slider" @mousedown="setStartCoordinates($event)" @touchstart="setStartCoordinates($event)">
       <div class="card-slider__heading-wrapper">
         <div class="card-slider__heading">
           <h3 class="card-slider__title"><slot></slot></h3>
@@ -188,13 +188,24 @@ const componentParams = {
   },
   methods: {
     setStartCoordinates(evt) {
-      this.startCoordinates = evt.clientX
-      window.addEventListener('mouseup', this.getScrollDirection)
+      if (evt.clientX) {
+        this.startCoordinates = evt.clientX
+        window.addEventListener('mouseup', this.getScrollDirection)
+      } else {
+        this.startCoordinates = evt.touches[0].clientX
+        window.addEventListener('touchend', this.getScrollDirection)
+      }
     },
-    getScrollDirection() {
-      const endCords = event.clientX
+    getScrollDirection(evt) {
+      let endCords;
+      if (evt.clientX) {
+        endCords = evt.clientX
+        window.removeEventListener('mouseup', this.getScrollDirection)
+      } else {
+        endCords = evt.changedTouches[0].clientX
+        window.removeEventListener('touchend', this.getScrollDirection)
+      }
       const direction = this.startCoordinates - endCords
-      window.removeEventListener('mouseup', this.getScrollDirection)
       this.validateDirection(direction)
     },
     validateDirection(direction) {
