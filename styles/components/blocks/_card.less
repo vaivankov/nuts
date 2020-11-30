@@ -1,0 +1,62 @@
+// main: ../../style.less
+
+.card {
+  width: 250px;
+  min-height: 300px;
+  margin: 0 auto;
+  padding: 20px;
+
+  border: 2px solid @color-secondary;
+
+  &__image-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 150px;
+    margin: 0;
+
+    background-color: @color-secondary;
+  }
+
+  &__date {
+    margin: 5px 0;
+
+    color: @color-secondary;
+  }
+
+  &__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    height: 60px;
+    overflow: hidden;
+
+    line-height: 20px;
+    color: @color-primary;
+    text-overflow: ellipsis;
+
+    -webkit-line-clamp: 3;
+  }
+
+  &__body {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    height: 100px;
+    overflow: hidden;
+
+    line-height: 20px;
+    color: @color-hover;
+    text-overflow: ellipsis;
+
+    -webkit-line-clamp: 5;
+  }
+
+  &:hover {
+    border: 2px solid @color-primary;
+  }
+}

@@ -1,0 +1,37 @@
+// main: ../../style.less
+
+.progress-bar {
+  position: relative;
+
+  width: 200px;
+  height: 3px;
+  margin: 0 0 40px 0 ;
+
+  background-color: @color-border;
+
+  &::after {
+    content: "";
+    position: absolute;
+
+    width: var(--progress);
+    height: 100%;
+
+    background-color: @color-hover;
+
+    transition: all 0.3s;
+  }
+}
+
+@media (min-width: @tablet-width) {
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+}
+
+@media (min-width: @desktop-width) {
+  .progress-bar {
+    width: 300px;
+  }
+}
