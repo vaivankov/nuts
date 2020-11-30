@@ -248,7 +248,7 @@ const componentParams = {
     currentPage: function (newPage) {
       this.validatePageNum(newPage)
       const progressBar = this.$el.querySelector('.progress-bar')
-      const percent = this.currentPage * 100 / this.pageCount;
+      const percent = this.startItem * 100 / this.cards.length;
       progressBar.style = `--progress: ${percent}%;`
       this.updateButtonBlocks()
     }
