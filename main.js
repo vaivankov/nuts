@@ -267,7 +267,7 @@ const componentParams = {
     window.addEventListener('resize', this.setResizeData)
     this.setResizeData()
     setInterval(() => {
-      // this.pageChanged++
+      this.validateDirection(100)
     }, this.sliderSpeed)
   },
   beforeDestroy() {
