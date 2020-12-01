@@ -242,6 +242,7 @@ const componentParams = {
       let currentItem = this.currentItem
       while (sortedCards.length < this.itemsPerPage) {
         currentItem < 0 && (currentItem = this.cards.length + currentItem)
+        currentItem >= this.cards.length && (currentItem -= this.cards.length)
         let item = this.cards[currentItem]
         sortedCards.push(item)
         this.backward ? currentItem-- : currentItem++
@@ -266,6 +267,7 @@ const componentParams = {
   mounted() {
     window.addEventListener('resize', this.setResizeData)
     this.setResizeData()
+    this.updateButtonBlocks()
     setInterval(() => {
       this.validateDirection(100)
     }, this.sliderSpeed)
