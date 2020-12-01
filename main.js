@@ -42,7 +42,6 @@ const componentParams = {
       currentPage: null,
       currentItem: 0,
       pageChanged: 0,
-      backward: false,
       startCoordinates: null,
       cards: [
 
@@ -213,14 +212,8 @@ const componentParams = {
     },
     validateDirection(direction) {
       if (direction < 50 && direction > -50) return
-      if (direction < -50) {
-        this.backward = true
-        this.currentItem -= this.itemsPerPage
-      }
-      if (direction > 50) {
-        this.backward = false
-        this.currentItem += this.itemsPerPage
-      }
+      direction < -50 && (this.currentItem -= this.itemsPerPage)
+      direction > 50 && (this.currentItem += this.itemsPerPage)
       this.updatePage()
     },
     updatePage() {
@@ -245,7 +238,7 @@ const componentParams = {
         currentItem >= this.cards.length && (currentItem -= this.cards.length)
         let item = this.cards[currentItem]
         sortedCards.push(item)
-        this.backward ? currentItem-- : currentItem++
+        currentItem++
       }
       this.cardScopes = sortedCards
     }
