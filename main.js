@@ -40,6 +40,9 @@ const componentParams = {
       itemsPerPage: 4,
       componentWidth: null,
       currentPage: null,
+      currentItem: 0,
+      pageChanged: 0,
+      backward: false,
       startCoordinates: null,
       cards: [
 
@@ -209,16 +212,23 @@ const componentParams = {
       this.validateDirection(direction)
     },
     validateDirection(direction) {
-      let num = this.currentPage;
       if (direction < 50 && direction > -50) return
-      direction > 50 && num++
-      direction < -50 && num--
-      this.validatePageNum(num)
+      if (direction < -50) {
+        this.backward = true
+        this.currentItem -= this.itemsPerPage
+      }
+      if (direction > 50) {
+        this.backward = false
+        this.currentItem += this.itemsPerPage
+      }
+      this.updatePage()
     },
-    validatePageNum(num) {
-      num < 0 && (num = this.pageCount)
-      num > this.pageCount && (num = 0)
-      this.currentPage = num;
+    updatePage() {
+      this.currentItem < 0
+        && (this.currentItem = this.cards.length - (this.currentItem * -1))
+      this.currentItem >= this.cards.length
+        && (this.currentItem = 0)
+      this.pageChanged++
     },
     setResizeData() {
       this.componentWidth = this.$el.clientWidth
@@ -229,14 +239,12 @@ const componentParams = {
     },
     updateButtonBlocks() {
       let sortedCards = []
-      let currentIndex = this.startItem;
-      const arrayLength = this.cards.length;
-      const itemsPerPage = this.itemsPerPage;
-      for (; sortedCards.length < itemsPerPage; currentIndex++) {
-        currentIndex < 0 && (currentIndex = arrayLength - currentIndex * -1)
-        currentIndex >= arrayLength && (currentIndex = 0)
-        let item = this.cards[currentIndex]
+      let currentItem = this.currentItem
+      while (sortedCards.length < this.itemsPerPage) {
+        currentItem < 0 && (currentItem = this.cards.length + currentItem)
+        let item = this.cards[currentItem]
         sortedCards.push(item)
+        this.backward ? currentItem-- : currentItem++
       }
       this.cardScopes = sortedCards
     }
@@ -245,23 +253,11 @@ const componentParams = {
     itemsPerPage: function () {
       this.updateButtonBlocks()
     },
-    currentPage: function (newPage) {
-      this.validatePageNum(newPage)
+    pageChanged: function () {
       const progressBar = this.$el.querySelector('.progress-bar')
-      const percent = this.startItem * 100 / this.cards.length;
+      const percent = this.currentItem * 100 / this.cards.length;
       progressBar.style = `--progress: ${percent}%;`
       this.updateButtonBlocks()
-    }
-  },
-  computed: {
-    pageCount() {
-      return Math.floor(this.cards.length / this.itemsPerPage)
-    },
-    startItem() {
-      return this.currentPage * this.itemsPerPage
-    },
-    endItem() {
-      return (this.currentPage * this.itemsPerPage) + this.itemsPerPage
     }
   },
   created() {
@@ -270,9 +266,8 @@ const componentParams = {
   mounted() {
     window.addEventListener('resize', this.setResizeData)
     this.setResizeData()
-    this.updateButtonBlocks()
     setInterval(() => {
-      this.currentPage++
+      // this.pageChanged++
     }, this.sliderSpeed)
   },
   beforeDestroy() {
